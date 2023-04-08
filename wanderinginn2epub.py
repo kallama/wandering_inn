@@ -14,7 +14,7 @@ import sys
 import re
 from copy import deepcopy
 from pprint import pprint
-from urllib.request import URLError, urlopen
+from urllib.request import URLError, urlopen, Request
 
 from bs4 import BeautifulSoup
 from tqdm import tqdm
