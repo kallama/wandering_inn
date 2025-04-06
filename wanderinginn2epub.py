@@ -5,6 +5,7 @@ Created on Mon Nov  5 01:19:53 2018
 @author: Patrick
 """
 
+import time
 import argparse
 import codecs
 import json
@@ -16,6 +17,7 @@ import time
 from copy import deepcopy
 from pprint import pprint
 from urllib.request import URLError
+from urllib.request import Request
 from urllib.request import urlopen as _urlopen
 
 from bs4 import BeautifulSoup
@@ -107,9 +109,9 @@ class Chapter:
 
     def get_page(self):
         if self.url.startswith('http'):
-            return urlopen(self.url, timeout=5)
+            return urlopen(Request(self.url, headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9'}), timeout=5)
         else:
-            return urlopen('https://wanderinginn.com/' + self.url, timeout=5)
+            return urlopen(Request('https://wanderinginn.com/', headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9'}), timeout=5)
 
     def save(self, stream=sys.stdout, strip_color=False, image_path='./images'):
         p = self.get_page()
@@ -155,7 +157,7 @@ class Chapter:
                     pass
             if img_filename:
                 with open(os.path.join(image_path, img_filename), 'wb') as fo:
-                    fo.write(urlopen(img['src'], timeout=10, context=ssl.create_default_context()).read())
+                    fo.write(urlopen(Request(img['src'], headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9'}), timeout=10, context=ssl.create_default_context()).read())
                 img['src'] = os.path.join(image_path, img_filename)
             else:
                 print(f'Removing image: unable to determine filename:\n\t{img}')
@@ -255,7 +257,7 @@ def parse_args():
 
 
 def get_toc(toc_url=r'https://wanderinginn.com/table-of-contents/'):
-    page = urlopen(toc_url)
+    page = urlopen(Request(toc_url, headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9'}))
     soup = BeautifulSoup(page, 'lxml')
 
     toc = []
@@ -346,6 +348,7 @@ def get_book(ebook_data,
             except URLError as err:
                 os.unlink(filename)
                 raise err
+        time.sleep(800)
 
 
 def main():
