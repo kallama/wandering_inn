@@ -348,7 +348,8 @@ def get_book(ebook_data,
             except URLError as err:
                 os.unlink(filename)
                 raise err
-        time.sleep(800)
+            time.sleep(120)
+        time.sleep(10)
 
 
 def main():
