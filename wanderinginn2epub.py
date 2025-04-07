@@ -79,7 +79,8 @@ class RateLimited:
 
 
 # Replace urlopen with a rate limited version:
-urlopen = RateLimited(_urlopen)
+#urlopen = RateLimited(_urlopen)
+urlopen = _urlopen
 
 
 class Chapter:
@@ -135,7 +136,8 @@ class Chapter:
             for span in contents.find_all('span'):
                 if 'color' in str(span):
                     try:
-                        hexcolor = re.findall(r'(?<=color\:)\#[0-9a-fA-F]{6}', str(span))[0]
+                        hexcolor = re.findall(r'(?<=color\:)\s?\#[0-9a-fA-F]{6}', str(span))[0]
+                        hexcolor = hexcolor.strip()
                         color = get_semantic_color_from_hex(hexcolor).upper()
                     except Exception as error:
                         print(f'Error replacing color: {error}')
